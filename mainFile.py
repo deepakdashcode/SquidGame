@@ -47,9 +47,9 @@ motiond = 0
 end = 0
 
 circle_color = (0, 255, 0)  # Green color
-circle_radius = 50
-circle_thickness = 5
-circle_center = (100, 150)
+circle_radius = 70
+circle_thickness = 70
+circle_center = (200, 150)
 last_color_change_time = time.time()
 
 while True:
@@ -74,7 +74,7 @@ while True:
         if remaining_time <= 0 or motiond == 1:
             game_over = True
         else:
-            cv2.putText(frame, "Time: {}".format(remaining_time), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            cv2.putText(frame, "Time: {}".format(remaining_time), (250, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3)
 
             if cv2.waitKey(1) & 0xFF == ord('k'):
 
