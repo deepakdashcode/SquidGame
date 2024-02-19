@@ -1,2 +1,6 @@
-opencv-python
-playsound
+opencv-python~=4.9.0.80
+playsound~=1.3.0
+
+PILasOPENCV~=2.7
+numpy~=1.26.3
+pillow~=10.2.0

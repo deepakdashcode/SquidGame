@@ -2,13 +2,23 @@ import cv2
 import time
 import playsound
 import threading
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 
+font = ImageFont.truetype('effect1.ttf', 100)
+def add_text(frame, text, font, position=(0, 0), color=(255, 255, 255)):
+    img = Image.fromarray(frame)
+    draw = ImageDraw.Draw(img)
+    draw.text(position, text, font=font, fill=color)
+    frame = np.array(img)
+    return frame
 
 def passed():
     playsound.playsound('mission_passed.mp3')
 
 def failed():
-    playsound.playsound('mission_failed.mp3')
+    # playsound.playsound('mission_failed.mp3')
+    playsound.playsound('suffer.mp3')
 class MotionDetector:
     def __init__(self, threshold=50):
         self.threshold = threshold
@@ -37,10 +47,10 @@ class MotionDetector:
 
 
 md = MotionDetector()
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 start_time = cv2.getTickCount()
-countdown_time = 15
+countdown_time = 18
 elapsed_time = 0
 game_over = False
 motiond = 0
@@ -52,6 +62,7 @@ circle_thickness = 70
 circle_center = (200, 150)
 last_color_change_time = time.time()
 
+
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -59,7 +70,7 @@ while True:
     frame = cv2.resize(frame, (1280, 720))
     motion_detected = md.detect_motion(frame)
     current_time = time.time()
-    if current_time - last_color_change_time > 3:
+    if current_time - last_color_change_time > 1.7:
         last_color_change_time = current_time
         if circle_color == (0, 255, 0):
             circle_color = (0, 0, 255)  # Red color
@@ -77,9 +88,10 @@ while True:
             cv2.putText(frame, "Time: {}".format(remaining_time), (250, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3)
 
             if cv2.waitKey(1) & 0xFF == ord('k'):
-
                 def fun1():
-                    cv2.putText(frame, "MISSION PASSED. RESPECT ++", (200, 360), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 4)
+                    cv2.putText(frame, "MISSION PASSED!", (400, 360), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 7)
+                    cv2.putText(frame, "Respect ++", (500, 430), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 7)
+
                     win_start_time = time.time()
                     while time.time() - win_start_time < 0.1:
                         cv2.imshow('Frame', frame)
@@ -99,10 +111,12 @@ while True:
 
     # Display the frame
     cv2.imshow('Frame', frame)
-
-    if game_over == True and end == 0:
+    if game_over and end == 0:
+        #font = PILasOPENCV.truetype('custom_font.otf', 25)
         def f2():
-            cv2.putText(frame, "WASTED", (480, 360), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4)
+            global frame
+            #cv2.putText(frame, "WASTED", (480, 360), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4)
+            frame = add_text(frame, "ROT IN HELL", font, (400, 360), (0, 0, 255))
             game_over_start_time = time.time()
             while time.time() - game_over_start_time < 0.1:
                 cv2.imshow('Frame', frame)
