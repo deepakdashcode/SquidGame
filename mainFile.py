@@ -6,6 +6,9 @@ import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 
 font = ImageFont.truetype('effect1.ttf', 100)
+font1 = ImageFont.truetype('gta_font.ttf', 100)
+
+interval = 1.7
 def add_text(frame, text, font, position=(0, 0), color=(255, 255, 255)):
     img = Image.fromarray(frame)
     draw = ImageDraw.Draw(img)
@@ -19,6 +22,7 @@ def passed():
 def failed():
     # playsound.playsound('mission_failed.mp3')
     playsound.playsound('suffer.mp3')
+
 class MotionDetector:
     def __init__(self, threshold=50):
         self.threshold = threshold
@@ -47,7 +51,7 @@ class MotionDetector:
 
 
 md = MotionDetector()
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 start_time = cv2.getTickCount()
 countdown_time = 18
@@ -70,7 +74,7 @@ while True:
     frame = cv2.resize(frame, (1280, 720))
     motion_detected = md.detect_motion(frame)
     current_time = time.time()
-    if current_time - last_color_change_time > 1.7:
+    if current_time - last_color_change_time > interval:
         last_color_change_time = current_time
         if circle_color == (0, 255, 0):
             circle_color = (0, 0, 255)  # Red color
@@ -89,8 +93,12 @@ while True:
 
             if cv2.waitKey(1) & 0xFF == ord('k'):
                 def fun1():
-                    cv2.putText(frame, "MISSION PASSED!", (400, 360), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 7)
-                    cv2.putText(frame, "Respect ++", (500, 430), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 7)
+                    global frame
+                    frame = add_text(frame, "mission passed!", font1, (380, 360), (255, 255, 255))
+                    frame = add_text(frame, "Respect ++", font1, (470, 470), (255, 255, 255))
+
+                    #cv2.putText(frame, "MISSION PASSED!", (400, 360), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 7)
+                    #cv2.putText(frame, "Respect ++", (500, 430), cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 7)
 
                     win_start_time = time.time()
                     while time.time() - win_start_time < 0.1:
